@@ -3,11 +3,9 @@ using System.Collections.Generic;
 using System.Diagnostics.Contracts;
 using System.Reflection;
 using System.Threading;
-using Ncqrs.Commanding;
 using Ncqrs.Domain.Storage;
 using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
-using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage;
 
@@ -94,7 +92,12 @@ namespace Ncqrs.Domain
             CreateSnapshots();
         }
 
-        private void CreateSnapshots()
+    	public override IEnumerable<UncommittedEvent> GetUncommittedEvents()
+    	{
+    		return _eventStream;
+    	}
+
+    	private void CreateSnapshots()
         {
             foreach (AggregateRoot savedInstance in _dirtyInstances)
             {

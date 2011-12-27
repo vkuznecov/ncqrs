@@ -138,6 +138,11 @@ namespace Ncqrs.Eventing.Storage.JOliver
             }
         }
 
+		public override IEnumerable<UncommittedEvent> GetUncommittedEvents()
+		{
+			return _eventStream;
+		}
+
         public override string ToString()
         {
             return string.Format("{0}@{1}", _commitId, Thread.CurrentThread.ManagedThreadId);
