@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using Ncqrs.Eventing;
 
 namespace Ncqrs.Domain
@@ -49,5 +51,7 @@ namespace Ncqrs.Domain
         /// that has been occured will be stored and published.
         /// </summary>
         void Accept();
+
+		IEnumerable<UncommittedEvent> GetUncommittedEvents();
     }
 }
