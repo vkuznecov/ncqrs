@@ -18,14 +18,19 @@ namespace Ncqrs.Domain
         protected EntityMappedByConvention(TAggregateRoot parent, Guid entityId)
             : base(parent, entityId)
         {
-        	AssignRoot(parent);
+        	internalAssignRoot(parent);
         }
 
-		public void AssignRoot(TAggregateRoot root)
+		public override void AssignRoot(TAggregateRoot root)
+		{
+			base.AssignRoot(root);
+			internalAssignRoot(root);
+		}
+
+		private void internalAssignRoot(TAggregateRoot root)
 		{
 			var mapping = new ConventionBasedEventHandlerMappingStrategy();
 			var handlers = mapping.GetEventHandlers(this);
-
 			foreach (var directHandler in handlers)
 			{
 				var handler = new EntityThresholdedDomainEventHandlerWrapper(EntityId, GetType(), directHandler);

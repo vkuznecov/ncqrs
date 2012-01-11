@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Domain
@@ -24,7 +25,7 @@ namespace Ncqrs.Domain
         private readonly Guid _entityId;
 
         [NonSerialized]
-        private readonly TAggregateRoot _parent;
+        private TAggregateRoot _parent;
 
         protected TAggregateRoot ParentAggregateRoot
         {
@@ -73,6 +74,26 @@ namespace Ncqrs.Domain
                             evnt.GetType().FullName, this.GetType().FullName, EntityId, evnt.EntityId);
                 throw new InvalidOperationException(message);
             }
-        }   
+        }
+
+		public virtual void AssignRoot(TAggregateRoot root)
+		{
+			if (_parent != null)
+			{
+				throw new InvalidOperationException("AggregateRoot is already assigned.");
+			}
+			_parent = root;
+		}
     }
+
+	public static class EntityExtensions
+	{
+		public static void AssignRoot<TRoot>(this IEnumerable<Entity<TRoot>> entities, TRoot root) where TRoot : AggregateRoot
+		{
+			foreach (Entity<TRoot> entity in entities)
+			{
+				entity.AssignRoot(root);
+			}
+		}
+	}
 }
