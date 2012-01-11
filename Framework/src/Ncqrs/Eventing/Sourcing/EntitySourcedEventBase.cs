@@ -2,6 +2,7 @@
 
 namespace Ncqrs.Eventing.Sourcing
 {
+	[Serializable]
     public abstract class EntitySourcedEventBase : IEntitySourcedEvent
     {
         public static Guid UndefinedEntityId = Guid.Empty;
