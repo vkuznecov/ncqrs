@@ -53,21 +53,20 @@ namespace Ncqrs.Domain
             _parent.RegisterHandler(handler);
         }
 
-        protected void ApplyEvent(EntitySourcedEventBase evnt)
+        protected void ApplyEvent(SourcedEntityEvent evnt)
         {
             // Make sure this event is not already
             // owned by another entity.
             ValidateEventOwnership(evnt);
 
             evnt.EntityId = EntityId;
-            evnt.AggregateId = _parent.EventSourceId;
-
+            
             _parent.ApplyEvent(evnt);
         }
 
-        private void ValidateEventOwnership(EntitySourcedEventBase evnt)
+		private void ValidateEventOwnership(SourcedEntityEvent evnt)
         {
-            if (evnt.EntityId != EntitySourcedEventBase.UndefinedEntityId)
+            if (evnt.EntityId != SourcedEntityEvent.UndefinedEntityId)
             {
                 var message = String.Format("The {0} event cannot be applied to entity {1} with id {2} " +
                             "since it was already owned by entity with id {3}.",

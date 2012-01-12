@@ -133,12 +133,12 @@
     <Compile Include="Eventing\Sourcing\EntityThresholdedDomainEventHandlerWrapper.cs" />
     <Compile Include="Eventing\Sourcing\EventAppliedEventArgs.cs" />
     <Compile Include="Eventing\Sourcing\IEntitySourcedEvent.cs" />
-    <Compile Include="Eventing\Sourcing\EntitySourcedEventBase.cs" />
     <Compile Include="Domain\Storage\AggregateSupportsSnapshotValidator.cs" />
     <Compile Include="Domain\Storage\IAggregateSupportsSnapshotValidator.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\ISnapshottingPolicy.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\NoSnapshottingPolicy.cs" />
     <Compile Include="Eventing\Sourcing\Snapshotting\SimpleSnapshottingPolicy.cs" />
+    <Compile Include="Eventing\Sourcing\SourcedEntityEvent.cs" />
     <Compile Include="Eventing\Storage\DuplicateCommitException.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBEventStore.cs" />
     <Compile Include="Eventing\Storage\NoDB\NoDBSnapshotStore.cs" />

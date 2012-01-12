@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Diagnostics.Contracts;
-using Ncqrs.Eventing.Sourcing;
 
 namespace Ncqrs.Eventing.Storage.Serialization
 {

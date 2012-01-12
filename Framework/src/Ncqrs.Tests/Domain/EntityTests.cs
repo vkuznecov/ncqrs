@@ -75,7 +75,7 @@ namespace Ncqrs.Tests.Domain
             }
         }
 
-        public class OrderLineCreatedEvent : EntitySourcedEventBase
+        public class OrderLineCreatedEvent : SourcedEntityEvent
         {
             private readonly decimal _value;
 
