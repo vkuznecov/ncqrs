@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Collections.Generic;
 using FluentAssertions;
-using Ncqrs.Eventing;
 using Ncqrs.Eventing.Sourcing;
 using Ncqrs.Eventing.Sourcing.Snapshotting;
 using Ncqrs.Eventing.Storage.SQL;
 using Ncqrs.Spec;
 using NUnit.Framework;
-using Rhino.Mocks;
 using System.Data.SqlClient;
 using Ncqrs.Eventing.Storage;
 using System.Configuration;
@@ -81,6 +77,7 @@ namespace Ncqrs.Tests.Eventing.Storage.SQL
             public Guid EntityId
             {
                 get { return AccountId; }
+				set { AccountId = value; }
             }
 
             public Guid AggregateId

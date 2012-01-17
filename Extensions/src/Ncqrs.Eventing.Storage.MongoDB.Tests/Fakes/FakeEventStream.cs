@@ -56,7 +56,7 @@ namespace Ncqrs.Eventing.Storage.MongoDB.Tests.Fakes
         }
 
         [Serializable]
-        public class AccountNameChangedEvent : EntitySourcedEventBase
+        public class AccountNameChangedEvent : SourcedEntityEvent
         {
             public Guid CustomerId { get; set; }
             public Guid AccountId { get { return EntityId; } }

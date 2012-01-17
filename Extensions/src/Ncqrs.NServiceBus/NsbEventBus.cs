@@ -1,9 +1,6 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Ncqrs.Eventing;
 using Ncqrs.Eventing.ServiceModel.Bus;
 using NServiceBus;
 
@@ -37,29 +34,23 @@ namespace Ncqrs.NServiceBus
             get { return NcqrsEnvironment.Get<IBus>(); }
         }
 
-        private static IMessage CreateEventMessage(IPublishableEvent publishableEvent)
+		private static IMessage CreateEventMessage(IPublishableEvent evnt)
         {
-            object payload = publishableEvent.Payload;
-            Type factoryType =
-               typeof(EventMessageFactory<>).MakeGenericType(payload.GetType());
-            var factory =
-               (IEventMessageFactory)Activator.CreateInstance(factoryType);
-            return factory.CreateEventMessage(payload);
+            Type factoryType = typeof(EventMessageFactory<>).MakeGenericType(evnt.Payload.GetType());
+	        var factory = (IEventMessageFactory)Activator.CreateInstance(factoryType);
+			return factory.CreateEventMessage(evnt);
         }
 
         public interface IEventMessageFactory
         {
-            IMessage CreateEventMessage(object payload);
+			IMessage CreateEventMessage(IPublishableEvent payload);
         }
 
         private class EventMessageFactory<T> : IEventMessageFactory
         {
-            IMessage IEventMessageFactory.CreateEventMessage(object payload)
+			IMessage IEventMessageFactory.CreateEventMessage(IPublishableEvent evnt)
             {
-                return new EventMessage<T>
-                          {
-                              Payload = (T)payload
-                          };
+				return new EventMessage<T>(evnt);
             }
         }
     }

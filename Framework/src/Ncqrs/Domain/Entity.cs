@@ -70,7 +70,7 @@ namespace Ncqrs.Domain
             {
                 var message = String.Format("The {0} event cannot be applied to entity {1} with id {2} " +
                             "since it was already owned by entity with id {3}.",
-                            evnt.GetType().FullName, this.GetType().FullName, EntityId, evnt.EntityId);
+                            evnt.GetType().FullName, GetType().FullName, EntityId, evnt.EntityId);
                 throw new InvalidOperationException(message);
             }
         }

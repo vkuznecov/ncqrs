@@ -18,6 +18,7 @@ TestResult.xml
 *.swp
 *.user
 *.DS_Store
+log.txt
 
 # Ncqrs in non framework solution
 /Extensions/lib/Ncqrs/*

@@ -170,16 +170,17 @@ namespace Ncqrs.Eventing.Sourcing
         internal protected void ApplyEvent(object evnt)
         {
             Log.DebugFormat("Applying an event to event source {0}", evnt);
-            var eventVersion = evnt.GetType().Assembly.GetName().Version;
-            var eventSequence = GetNextSequence();
+			var eventVersion = evnt.GetType().Assembly.GetName().Version;
+			var eventSequence = GetNextSequence();
+			//Legacy stuff...
+			var sourcedEvent = evnt as ISourcedEvent;
+			if (sourcedEvent != null)
+			{
+				sourcedEvent.ClaimEvent(EventSourceId, eventSequence);
+			}
             var wrappedEvent = new UncommittedEvent(_idGenerator.GenerateNewId(), EventSourceId, eventSequence, _initialVersion, DateTime.UtcNow, evnt, eventVersion);
 
-            //Legacy stuff...
-            var sourcedEvent = evnt as ISourcedEvent;
-            if (sourcedEvent != null)
-            {
-                sourcedEvent.ClaimEvent(EventSourceId, eventSequence);
-            }
+            
             Log.DebugFormat("Handling event {0} in event source {1}", wrappedEvent, this);
             HandleEvent(wrappedEvent.Payload);
             Log.DebugFormat("Notifying about application of an event {0} to event source {1}", wrappedEvent, this);

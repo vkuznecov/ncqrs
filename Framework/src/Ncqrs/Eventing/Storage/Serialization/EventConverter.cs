@@ -12,7 +12,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
     /// <seealso cref="NullEventConverter"/>
     public class EventConverter : IEventConverter
     {
-        private readonly Dictionary<string, IEventConverter> _converters;
+		private readonly Dictionary<Type, IEventConverter> _converters;
         private readonly IEventTypeResolver _typeResolver;
 
 
@@ -25,7 +25,7 @@ namespace Ncqrs.Eventing.Storage.Serialization
         {
             Contract.Requires<ArgumentNullException>(typeResolver != null, "typeResolver");
 
-            _converters = new Dictionary<string, IEventConverter>();
+			_converters = new Dictionary<Type, IEventConverter>();
             _typeResolver = typeResolver;
         }
 
@@ -44,7 +44,8 @@ namespace Ncqrs.Eventing.Storage.Serialization
         public void Upgrade(StoredEvent<JObject> theEvent)
         {
             IEventConverter converter;
-            if (_converters.TryGetValue(theEvent.EventName, out converter))
+            Type eventType = _typeResolver.ResolveType(theEvent.EventName);
+			if (_converters.TryGetValue(eventType, out converter))
                 converter.Upgrade(theEvent);
         }
 
@@ -66,36 +67,18 @@ namespace Ncqrs.Eventing.Storage.Serialization
             Contract.Requires<ArgumentNullException>(eventType != null, "eventType");
             Contract.Requires<ArgumentNullException>(converter != null, "converter");
 
-            string name = _typeResolver.EventNameFor(eventType);
-            AddConverter(name, converter);
-        }
-
-        /// <summary>
-        /// Adds a converter for the specified event to be used when upgrading events.
-        /// </summary>
-        /// <remarks>
-        /// <para>You do not need to add a converter for every event, only those that require upgrading.
-        /// If an event has no converter added it will be left un-modified.</para>
-        /// </remarks>
-        /// <param name="eventName">The name of the event the <paramref name="converter"/> handles.</param>
-        /// <param name="converter">The converter for the event specified by <paramref name="eventName"/>.</param>
-        /// <exception cref="ArgumentNullException">If <paramref name="eventName"/> or <paramref name="converter"/> is <value>null</value>.</exception>
-        /// <exception cref="ArgumentException">If a converter for <paramref name="eventName"/> has already been added.</exception>
-        public void AddConverter(string eventName, IEventConverter converter)
-        {
-            Contract.Requires<ArgumentNullException>(eventName != null, "eventName");
-            Contract.Requires<ArgumentNullException>(converter != null, "converter");
-
-            ThrowIfNameExists(eventName);
-            _converters.Add(eventName, converter);
+			ThrowIfEventExists(eventType);
+			_converters.Add(eventType, converter);
         }
 
 
-        private void ThrowIfNameExists(string eventName) {
-            if (_converters.ContainsKey(eventName)) {
-                string message = string.Format("There is already a converter for event '{0}'.", eventName);
-                throw new ArgumentException(message, "eventName");
-            }
-        }
+        private void ThrowIfEventExists(Type eventType)
+		{
+			if (_converters.ContainsKey(eventType))
+			{
+				string message = string.Format("There is already a converter for event '{0}'.", eventType.AssemblyQualifiedName);
+				throw new ArgumentException(message, "eventType");
+             }
+         }
     }
 }

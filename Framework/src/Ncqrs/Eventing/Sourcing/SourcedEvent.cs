@@ -4,6 +4,7 @@ using Ncqrs.Eventing.Storage;
 namespace Ncqrs.Eventing.Sourcing
 {
     [Serializable]
+	[Obsolete]
     public abstract class SourcedEvent : Event, ISourcedEvent
     {
         /// <summary>
